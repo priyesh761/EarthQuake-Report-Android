@@ -1,6 +1,7 @@
 package com.example.android.quakereport
 
 import android.content.Context
+import android.content.Intent
 import android.support.v4.content.ContextCompat
 import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v7.widget.RecyclerView
@@ -24,8 +25,7 @@ class EarthquakeRListAdapter(private val context: Context, private val earthquak
 
     override fun onBindViewHolder(holder: EarthquakeRViewHolder, position: Int) {
 
-
-        val (magnitude, mSource, timeInMillisecond) = earthquakeList[position]
+        val (magnitude, mSource, timeInMillisecond, url) = earthquakeList[position]
         val formattedMagnitude = formatMagnitude(magnitude)
         holder.magnitude.text = formattedMagnitude
 
@@ -51,29 +51,31 @@ class EarthquakeRListAdapter(private val context: Context, private val earthquak
 
         val timeToDisplay = formatTime(currDateTime)
         holder.time.text = timeToDisplay
+
+        holder.itemView.setOnClickListener {
+
+            val intent = Intent(context, Web::class.java)
+            if (BuildConfig.DEBUG && it == null) {
+                error("Assertion failed")
+            }
+            intent.putExtra("url", url)
+            context.startActivity(intent)
+
+        }
+
     }
 
     override fun getItemCount(): Int {
         return earthquakeList.size
     }
 
-    class EarthquakeRViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+
+    class EarthquakeRViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val magnitude: TextView = itemView.findViewById(R.id.magnitude)
         val source: TextView = itemView.findViewById(R.id.source_city)
         val sourceOffset: TextView = itemView.findViewById(R.id.source_distance)
         val date: TextView = itemView.findViewById(R.id.date)
         val time: TextView = itemView.findViewById(R.id.time)
-        override fun onClick(v: View?) {
-            /*EarthquakeListItem er = mAdapter.getItem(i);
-            // Intent intent = new Intent(Intent.ACTION_VIEW);
-            //intent.setData(Uri.parse(er.getURL()));
-            Intent intent = new Intent(EarthquakeActivity.this, Web.class);
-            assert er != null;
-            intent.putExtra("url", er.getURL());
-            startActivity(intent);
-
-             */
-        }
 
     }
 
@@ -131,5 +133,6 @@ class EarthquakeRListAdapter(private val context: Context, private val earthquak
         }
         return ContextCompat.getColor(context, magnitudeColorResourceId)
     }
+
 
 }
