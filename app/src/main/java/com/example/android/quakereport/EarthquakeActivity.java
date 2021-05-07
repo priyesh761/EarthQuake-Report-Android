@@ -27,12 +27,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -44,7 +44,8 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
     private static final String USGS_BASE_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query";
     private static final String TAG = "Debug";
     private static String USGS_REQUEST_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=1&limit=50";
-    private static EarthquakeListAdapter mAdapter;
+    //private static EarthquakeListAdapter mAdapter;
+    private EarthquakeRListAdapter mRAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,15 +53,17 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
         setContentView(R.layout.earthquake_activity);
 
         // Find a reference to the {@link ListView} in the layout
-        ListView earthquakeListView = (ListView) findViewById(R.id.list);
+        //ListView earthquakeListView = (ListView) findViewById(R.id.list);
+        RecyclerView earthquakeRListView = findViewById(R.id.Rlist);
 
-        earthquakeListView.setEmptyView(findViewById(R.id.empty_screen));
-        // Create a new {@link ArrayAdapter} of earthquakes
-        mAdapter = new EarthquakeListAdapter(this, new ArrayList<EarthquakeListItem>());
+        earthquakeRListView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
-        // so the list can be populated in the user interface
-        earthquakeListView.setAdapter(mAdapter);
+        // Create a new Recycler View adapter of earthquakes
+        mRAdapter = new EarthquakeRListAdapter(this, new ArrayList<EarthquakeListItem>());
 
+        earthquakeRListView.setAdapter(mRAdapter);
+
+        /*
         earthquakeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -74,6 +77,7 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
                 startActivity(intent);
             }
         });
+*/
 
         getLoaderManager().initLoader(0, null, EarthquakeActivity.this).forceLoad();
     }
@@ -106,24 +110,29 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
     @Override
     public void onLoadFinished(Loader<List<EarthquakeListItem>> loader, List<EarthquakeListItem> data) {
         Log.d(TAG, "onLoadFinished: ");
-        mAdapter.clear();
-        if (data != null && !data.isEmpty())
-            mAdapter.addAll(data);
-        TextView empty = (TextView) findViewById(R.id.empty_screen);
+        mRAdapter.clear();
         findViewById(R.id.spinner).setVisibility(View.GONE);
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork != null &&
-                activeNetwork.isConnectedOrConnecting();
-        if (isConnected) empty.setText(R.string.no_earthquake_found);
-        else empty.setText(R.string.check_internet_msg);
+        TextView empty = findViewById(R.id.empty_screen);
+
+        if (data != null && !data.isEmpty()) {
+            empty.setVisibility(View.GONE);
+            mRAdapter.addAll((ArrayList<EarthquakeListItem>) data);
+            mRAdapter.notifyDataSetChanged();
+        } else {
+            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            boolean isConnected = activeNetwork != null &&
+                    activeNetwork.isConnectedOrConnecting();
+            if (isConnected) empty.setText(R.string.no_earthquake_found);
+            else empty.setText(R.string.check_internet_msg);
+        }
     }
-
     @Override
     public void onLoaderReset(Loader<List<EarthquakeListItem>> loader) {
-        mAdapter.clear();
-        mAdapter.addAll(new ArrayList<EarthquakeListItem>());
+        mRAdapter.clear();
+        mRAdapter.addAll(new ArrayList<EarthquakeListItem>());
         Log.d(TAG, "onLoaderReset: ");
     }
 
