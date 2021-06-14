@@ -3,6 +3,14 @@ Quake Report App
 
 This app displays a list of recent earthquakes in the world
 from the U.S. Geological Survey (USGS) organization.
+<br>
+<pre> 
+<a href="https://drive.google.com/file/d/1I9CwFbr4bPJphjEf8XPckuEG7T0nCosx/view?usp=sharing">Link to apk</a>
+</pre>
+Home             |  Setting | Web view on Click|
+:-------------------------:|:-------------------------:|:-------------------------:|
+<img src="https://user-images.githubusercontent.com/47264892/121848761-1cb52c80-cd08-11eb-9d20-c7a97ce5f224.jpeg" width="250" height="500">|<img src="https://user-images.githubusercontent.com/47264892/121848783-263e9480-cd08-11eb-96d8-ce0ab2c8b98c.jpeg" width="250" height="500">|<img src="https://user-images.githubusercontent.com/47264892/121848772-22ab0d80-cd08-11eb-8981-b55724a33bcb.jpeg" width="250" height="500">|
+
 
 
 More info on the USGS Earthquake API available at:
