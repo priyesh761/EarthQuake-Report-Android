@@ -3,9 +3,9 @@ Quake Report App
 
 This app displays a list of recent earthquakes in the world
 from the U.S. Geological Survey (USGS) organization.
-<br>
 <pre> 
-<a href="https://drive.google.com/file/d/1I9CwFbr4bPJphjEf8XPckuEG7T0nCosx/view?usp=sharing">Link to apk</a>
+<a href="https://drive.google.com/file/d/1I9CwFbr4bPJphjEf8XPckuEG7T0nCosx/view?usp=sharing" style="font-size:10vw">Link to apk</a>
+
 </pre>
 Home             |  Setting | Web view on Click|
 :-------------------------:|:-------------------------:|:-------------------------:|
